@@ -22,7 +22,7 @@ export class UserService {
       email: createUserDto.email,
       password: await argon2.hash(createUserDto.password),
     });
-    return 'This action adds a new user';
+    return newUser;
   }
 
   // findAll() {
