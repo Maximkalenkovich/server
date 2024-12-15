@@ -8,7 +8,6 @@ import { IUser } from 'src/types/types';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly configService: ConfigService) {
     const jwtSecret = configService.get('JWT_SECRET');
-    console.log('JWT_SECRET:', jwtSecret); // Добавьте эту строку для отладки
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,

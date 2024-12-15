@@ -12,8 +12,18 @@ export class AuthService {
   ) {}
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.UserService.findOne(email);
+    if (!user || !user.password) {
+      throw new UnauthorizedException(
+        'Invalid credentials: user not found or no password',
+      );
+    }
+
+    if (!password) {
+      throw new UnauthorizedException('Password must be provided');
+    }
+
     const passwordIsValid = await argon2.verify(user.password, password);
-    if (user && passwordIsValid) {
+    if (passwordIsValid) {
       return user;
     }
     throw new UnauthorizedException('Invalid credentials');
