@@ -50,8 +50,8 @@ export class CategoryService {
     return await this.categoryRepository.update(id, updateCategoryDto);
   }
 
-  remove(id: number) {
-    const isExist = this.categoryRepository.findOne({
+  async remove(id: number) {
+    const isExist = await this.categoryRepository.findOne({
       where: { id },
     });
     if (!isExist) throw new BadRequestException('category not found');
