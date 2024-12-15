@@ -17,7 +17,7 @@ export class User {
   @Column()
   email: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
   @OneToMany(() => Transaction, (transaction) => transaction.user)
