@@ -27,7 +27,7 @@ export class TransactionService {
   async findAll(userId: number) {
     const transactions = await this.transactionRepository.find({
       where: { user: { id: userId } },
-      relations: { category: true },
+      relations: { category: true, user: true },
       order: { createdAt: 'DESC' },
     });
     if (!transactions) throw new BadRequestException('transactions not found');
@@ -37,7 +37,7 @@ export class TransactionService {
   async findOne(transactionId: number) {
     const transaction = await this.transactionRepository.findOne({
       where: { id: transactionId },
-      relations: { category: true },
+      relations: { category: true, user: true },
     });
     if (!transaction) throw new BadRequestException('transaction not found');
     return transaction;
@@ -46,6 +46,7 @@ export class TransactionService {
   async update(id: number, updateTransactionDto: UpdateTransactionDto) {
     const updareTransaction = await this.transactionRepository.findOne({
       where: { id },
+      relations: { category: true, user: true },
     });
     if (!updareTransaction)
       throw new BadRequestException('transaction not found');
@@ -71,5 +72,16 @@ export class TransactionService {
     });
     if (!transactions) throw new BadRequestException('transactions not found');
     return transactions;
+  }
+  async findAllByType(id: number, type: 'expense' | 'income') {
+    const transactions = await this.transactionRepository.find({
+      where: { user: { id }, type },
+      relations: { category: true, user: true },
+      order: { createdAt: 'DESC' },
+    });
+    if (!transactions) throw new BadRequestException('transactions not found');
+
+    const total = transactions.reduce((acc, curr) => acc + curr.amount, 0);
+    return { transactions, total };
   }
 }
